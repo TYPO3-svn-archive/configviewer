@@ -3,7 +3,7 @@
 ########################################################################
 # Extension Manager/Repository config file for ext "configviewer".
 #
-# Auto generated 17-08-2010 23:05
+# Auto generated 25-08-2010 01:02
 #
 # Manual updates:
 # Only the data in the array - everything else is removed by next
@@ -40,7 +40,7 @@ $EM_CONF[$_EXTKEY] = array(
 	),
 	'suggests' => array(
 	),
-	'_md5_values_when_last_written' => 'a:10:{s:9:"ChangeLog";s:4:"d031";s:10:"README.txt";s:4:"ee2d";s:29:"class.tx_configviewer_eID.php";s:4:"a9a8";s:21:"ext_conf_template.txt";s:4:"48c0";s:12:"ext_icon.gif";s:4:"1bdc";s:17:"ext_localconf.php";s:4:"6c84";s:12:"lib/json.php";s:4:"6911";s:28:"nbproject/project.properties";s:4:"8aec";s:21:"nbproject/project.xml";s:4:"bbb3";s:36:"nbproject/private/private.properties";s:4:"34e3";}',
+	'_md5_values_when_last_written' => 'a:14:{s:9:"ChangeLog";s:4:"d031";s:10:"README.txt";s:4:"ee2d";s:13:"_ext_icon.gif";s:4:"1bdc";s:29:"class.tx_configviewer_eID.php";s:4:"efbf";s:21:"ext_conf_template.txt";s:4:"50db";s:12:"ext_icon.gif";s:4:"7630";s:17:"ext_localconf.php";s:4:"6c84";s:31:"icon-extension-configviewer.png";s:4:"70b5";s:31:"icon-extension-configviewer.psd";s:4:"c014";s:14:"doc/manual.sxw";s:4:"a9d0";s:12:"lib/json.php";s:4:"6911";s:28:"nbproject/project.properties";s:4:"8aec";s:21:"nbproject/project.xml";s:4:"bbb3";s:36:"nbproject/private/private.properties";s:4:"34e3";}',
 );
 
 ?>
