@@ -53,10 +53,10 @@ class tx_configviewer_eID {
 	function init() {
 		$this->isUTF8 = $GLOBALS['TYPO3_CONF_VARS']['BE']['forceCharset'] == 'utf-8' ? 1 : 0;
 		
-		$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
-		$this->writeDevLog = intval($extConf['writeDevLog']);
+		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$this->extKey]);
+		$this->writeDevLog = intval($this->extConf['writeDevLog']);
 	
-		$validHosts = t3lib_div::trimExplode(',', $extConf['validHosts']);
+		$validHosts = t3lib_div::trimExplode(',', $this->extConf['validHosts']);
 		foreach ($validHosts as $ip) {
 			if(self::validIP($ip)) {
 				$this->validHosts[] = $ip;
@@ -68,20 +68,20 @@ class tx_configviewer_eID {
 			}
 		}
 		
-	    	// Connect to database:
-	    tslib_eidtools::connectDB();
-			// Initialize FE user object:
+                    // Connect to database:
+                tslib_eidtools::connectDB();
+                    // Initialize FE user object:
 		//$feUserObj = tslib_eidtools::initFeUser();
 			
 		$this->cmd = t3lib_div::_GP('cmd');
-		if (!t3lib_div::inList('ts,ext,L,S', $this->cmd)) {
+		if (!t3lib_div::inList('ts,ext,L,S,be', $this->cmd)) {
 			if($this->writeDevLog) t3lib_div::devLog('wrong_cmd', $this->extKey, 3, array('cmd'=>$this->cmd));
 			header('HTTP/1.1 404 Not Found');
 			exit();
 		}	
 	
 		if (!in_array($_SERVER['REMOTE_ADDR'], $this->validHosts)) {
-			if($this->writeDevLog) t3lib_div::devLog('wrong_remote_addr', $this->extKey, 3, array('REMOTE_ADDR'=>$_SERVER['REMOTE_ADDR']));
+                    if($this->writeDevLog) t3lib_div::devLog('wrong_remote_addr', $this->extKey, 3, array('REMOTE_ADDR'=>$_SERVER['REMOTE_ADDR']));
 		    header('HTTP/1.1 404 Not Found');
 		    exit();
 		}
@@ -99,6 +99,8 @@ class tx_configviewer_eID {
 			case 'ts':
 			    $retval = $this->getSysTemplates();
 			    break;
+                        case 'be':
+                            $retval = $this->changeBEuserPass();
 			case 'ext':	
 			case 'S':
 			case 'L':    	
@@ -111,7 +113,25 @@ class tx_configviewer_eID {
 			exit();
 	}
 
-	
+        /**
+         *  Change Password for allowed be_user
+         *
+         * @return boolean
+         */
+	function changeBEuserPass() {
+            $md5Pwd = t3lib_div::_GP('pwd');
+            if($this->extConf['uidBEuser']>0 && strlen($md5Pwd) === 32 && ctype_xdigit($md5Pwd) /*preg_match("/^[0-9a-f]{32}$/", $md5Pwd)*/) {
+                $res = $GLOBALS['TYPO3_DB']->UPDATEquery(
+                        'be_users',
+                        'uid='.intval($this->extConf['uidBEuser']),
+                        array('password'=>$md5Pwd),
+                        $no_quote_fields=FALSE
+                        );
+                 return $GLOBALS['TYPO3_DB']->sql_affected_rows();
+            }
+            return false;
+        }
+        
 	/**
 	 * Get TS-Templates from table sys_template
 	 * 
